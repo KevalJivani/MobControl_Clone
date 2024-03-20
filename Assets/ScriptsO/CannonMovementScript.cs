@@ -56,7 +56,6 @@ public class CannonMovementScript : MonoBehaviour
             Vector3 currentPosition = spline.EvaluatePosition(splinescount, distancePercentage);
             transform.position = currentPosition;
 
-
             if (distancePercentage <= 1f)
             {
                 Vector3 nextPosition = spline.EvaluatePosition(splinescount, distancePercentage + 0.05f);

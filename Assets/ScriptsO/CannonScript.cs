@@ -19,6 +19,7 @@ public class CannonScript : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
 
     [SerializeField] private CannonMovementScript cannonMovementScript;
+    [SerializeField] private CannonDataSO CannonData;
 
     [Space(10)]
     [SerializeField] private BigGuyLauncherSliderUI bigGuyLauncherSliderUI;
@@ -61,7 +62,7 @@ public class CannonScript : MonoBehaviour
             position = new Vector3(xPosition, 0f, 0f);
 
             //Spawn Minions
-            SpawnMinions(SMALL_RUNNER);
+            //SpawnMinions(SMALL_RUNNER);
 
             transform.localPosition = position;
         }
@@ -71,7 +72,7 @@ public class CannonScript : MonoBehaviour
     {
         if (bigGuyLauncherSliderUI.isBarFilled)
         {
-            SpawnSpeacialMinion(BIG_RUNNER);
+            //SpawnSpeacialMinion(BIG_RUNNER);
             bigGuyLauncherSliderUI.fillAmount = 0;
             bigGuyLauncherSliderUI.isBarFilled = false;
         }
@@ -84,31 +85,31 @@ public class CannonScript : MonoBehaviour
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
 
-    private void SpawnMinions(string minionName)
-    {
-        if (Time.time - lastSpawnTime >= minionSpawnTime)
-        {
-            cannonTopAnimator.SetTrigger("CannonShoot");
+    //private void SpawnMinions(string minionName)
+    //{
+    //    if (Time.time - lastSpawnTime >= minionSpawnTime)
+    //    {
+    //        cannonTopAnimator.SetTrigger("CannonShoot");
 
-            var spawnedGameObj = ObjectPooler.Instance.SpawnObjectFromPool(minionName, spawnPoint.position, spawnPoint.rotation);
-            if (gmInstance.GamePartsList.Count > 0)
-            {
-                spawnedGameObj.transform.SetParent(gmInstance.GamePartsList[0].transform);
-            }
-            if (!bigGuyLauncherSliderUI.isBarFilled) bigGuyLauncherSliderUI.fillAmount++;
-            //Debug.Log("Spawned");
-            lastSpawnTime = Time.time;
-        }
-    }
+    //        var spawnedGameObj = ObjectPooler.Instance.SpawnObjectFromPool(minionName, spawnPoint.position, spawnPoint.rotation);
+    //        if (gmInstance.GamePartsList.Count > 0)
+    //        {
+    //            spawnedGameObj.transform.SetParent(gmInstance.GamePartsList[0].transform);
+    //        }
+    //        if (!bigGuyLauncherSliderUI.isBarFilled) bigGuyLauncherSliderUI.fillAmount++;
+    //        //Debug.Log("Spawned");
+    //        lastSpawnTime = Time.time;
+    //    }
+    //}
 
-    private void SpawnSpeacialMinion(string minionName)
-    {
-        cannonTopAnimator.SetTrigger("CannonShoot");
+    //private void SpawnSpeacialMinion(string minionName)
+    //{
+    //    cannonTopAnimator.SetTrigger("CannonShoot");
 
-        var spawnedGameObj = ObjectPooler.Instance.SpawnObjectFromPool(minionName, spawnPoint.position, spawnPoint.rotation);
-        if (gmInstance.GamePartsList.Count > 0)
-        {
-            spawnedGameObj.transform.SetParent(gmInstance.GamePartsList[0].transform);
-        }
-    }
+    //    var spawnedGameObj = ObjectPooler.Instance.SpawnObjectFromPool(minionName, spawnPoint.position, spawnPoint.rotation);
+    //    if (gmInstance.GamePartsList.Count > 0)
+    //    {
+    //        spawnedGameObj.transform.SetParent(gmInstance.GamePartsList[0].transform);
+    //    }
+    //}
 }
