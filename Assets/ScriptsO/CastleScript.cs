@@ -29,16 +29,17 @@ public class CastleScript : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         if (!other.gameObject.TryGetComponent(out Character character)) return;
-        if (character.characterType == Character.CharacterType.Player && castleHealth >= 0)
+        if (character.characterType == Character.CharacterType.Player && castleHealth > 0)
         {
+
+            castleHealth--;
+            OnDamage();
+
             if (castleHealth <= 0)
             {
                 OnCastleDestroyed?.Invoke(gameObject);
                 return;
             }
-
-            castleHealth--;
-            OnDamage();
 
             character.Health--;
             Debug.Log("Character Health going down" + character.gameObject.name);

@@ -389,13 +389,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05625f7afac09417f9ff915dde3fa2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minionSpawnTime: 0.5
-  cannonTopAnimator: {fileID: 6439448490562528510}
-  minX: -13
-  maxX: 13
   spawnPoint: {fileID: 2451227725765194598}
-  cannonMovementScript: {fileID: 8455007242905501569}
-  bigGuyLauncherSliderUI: {fileID: 4874953034256969778}
+  cannonData: {fileID: 0}
 --- !u!65 &8539588908012900667
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -628,7 +623,7 @@ Transform:
   m_GameObject: {fileID: 4937352824228986676}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 3.4699993}
+  m_LocalPosition: {x: 0, y: 0.25, z: 3.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

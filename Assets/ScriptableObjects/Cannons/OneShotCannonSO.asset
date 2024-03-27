@@ -10,5 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ca4ac06208334f5fadd3080f59b8626, type: 3}
-  m_Name: SingleShotCannon
+  m_Name: OneShotCannonSO
   m_EditorClassIdentifier: 
+  minX: -13
+  maxX: 13
+  minionSpawnTime: 0.5
+  minionSpawnAmount: 1

@@ -126,6 +126,7 @@ MonoBehaviour:
   multiplierWallVisual: {fileID: 2750483525097706244}
   rangeOfMovement: 5
   speed: 0
+  InvertMovement: 0
   canMove: 0
   multiplyAmount: 2
 --- !u!1 &3360694520729488388
@@ -155,8 +156,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3360694520729488388}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.36}
-  m_LocalScale: {x: 0.14230122, y: 0.21693857, z: 1.3836234}
+  m_LocalPosition: {x: 0, y: 0, z: -4.5}
+  m_LocalScale: {x: 0.14230122, y: 0.21693857, z: 1.3836235}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5282019549288158277}
@@ -164,7 +165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.012, y: 0.031}
   m_SizeDelta: {x: 6, y: 2.88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2932018614572333211

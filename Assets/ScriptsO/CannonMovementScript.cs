@@ -8,7 +8,7 @@ public class CannonMovementScript : MonoBehaviour
 {
     public static Action OnMovementCompleted;
 
-    [HideInInspector] public bool isMoving { private set; get; }
+    [HideInInspector] public static bool isMoving { private set; get; }
 
     [SerializeField] private SplineContainer spline;
     [SerializeField] private float speed;
@@ -33,6 +33,7 @@ public class CannonMovementScript : MonoBehaviour
     private void CastleManager_OnCastleDestroyed(GameObject obj)
     {
         MoveToNextPart();
+        RotateCannonBottom(true);
     }
 
     private void Start()
@@ -94,11 +95,13 @@ public class CannonMovementScript : MonoBehaviour
         if (spline.Splines.Count > splinescount)
         {
             var initialPos = spline.Splines[splinescount].ToArray()[0].Position.x;
+
             DOVirtual.DelayedCall(0.3f, () =>
              {
-                 transform.DOMoveX(initialPos, 0.2f).SetEase(Ease.InOutCirc).OnComplete(() =>
-                 {       
-                     RotateCannonBottom(true);
+                 transform.DOMoveX(initialPos, speed).SetSpeedBased(true).SetEase(Ease.InOutCirc).OnComplete(() =>
+                 {
+                     Debug.Log("adjusted position");
+                     //RotateCannonBottom(true);
                  });
              });
         }

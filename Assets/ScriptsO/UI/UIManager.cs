@@ -11,7 +11,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private LoosePanelUIScript loosePanel;
     //[Space(10)]
 
-
     private void OnEnable()
     {
         BaseLineScript.OnGameFailed += BaseLineScript_OnLevelFailed;

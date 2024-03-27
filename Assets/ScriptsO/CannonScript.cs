@@ -2,46 +2,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class CannonScript : MonoBehaviour
 {
     private const string SMALL_RUNNER = "NormalRunner";
     private const string BIG_RUNNER = "BigGuyRunner";
-    private GameManagerScript gmInstance;
+   
     private Vector3 _offset;
 
-    private float lastSpawnTime = 0f;
-    [SerializeField] private float minionSpawnTime = 0.5f;
-    [SerializeField] private Animator cannonTopAnimator;
+    private Animator cannonTopAnimator;
 
-    [SerializeField] private float minX;
-    [SerializeField] private float maxX;
     [SerializeField] private Transform spawnPoint;
 
-    [SerializeField] private CannonMovementScript cannonMovementScript;
-    [SerializeField] private CannonDataSO CannonData;
+    [SerializeField] private CannonDataSO cannonData;
 
-    [Space(10)]
-    [SerializeField] private BigGuyLauncherSliderUI bigGuyLauncherSliderUI;
+    private BigGuyLauncherSliderUI bigGuyLauncherSliderUI;
+
+    private bool canSpawnPlayers;
+
+    private void Start()
+    {
+        cannonTopAnimator = GetComponentInChildren<Animator>();
+        bigGuyLauncherSliderUI = GetComponentInChildren<BigGuyLauncherSliderUI>();
+    }
 
     private void OnEnable()
     {
+        CannonMovementScript.OnMovementCompleted += CannonMovementScript_OnMovementCompleted;
         CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
+        cannonData.OnNormalCharacterSpawned += CannonData_OnNormalCharacterSpawned;
+        cannonData.OnSpecialCharacterSpawned += CannonData_OnSpecialCharacterSpawned;
     }
+
 
     private void OnDisable()
     {
+        CannonMovementScript.OnMovementCompleted -= CannonMovementScript_OnMovementCompleted;
         CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
+        cannonData.OnNormalCharacterSpawned -= CannonData_OnNormalCharacterSpawned;
+        cannonData.OnSpecialCharacterSpawned -= CannonData_OnSpecialCharacterSpawned;
+    }
+
+    private void CannonMovementScript_OnMovementCompleted()
+    {
+        canSpawnPlayers = true;
+    }
+
+    private void CannonData_OnSpecialCharacterSpawned()
+    {
+        cannonTopAnimator.SetTrigger("CannonShoot");
+    }
+
+    private void CannonData_OnNormalCharacterSpawned()
+    {
+        cannonTopAnimator.SetTrigger("CannonShoot");
+        if (!bigGuyLauncherSliderUI.isBarFilled) bigGuyLauncherSliderUI.fillAmount++;
     }
 
     private void CastleManager_OnCastleDestroyed(GameObject obj)
     {
         transform.DOLocalMove(new Vector3(0f, transform.position.y, 0f), 1f).SetEase(Ease.InOutCirc);
-    }
-
-    private void Start()
-    {
-        gmInstance = GameManagerScript.Instance;
+        canSpawnPlayers = false;
     }
 
     private void OnMouseDown()
@@ -53,16 +75,16 @@ public class CannonScript : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        if (!cannonMovementScript.isMoving)
+        if (canSpawnPlayers)
         {
             var pos = MouseWorldPosition() + _offset;
             Vector3 position;
 
-            var xPosition = Mathf.Clamp(pos.x, minX, maxX);
+            var xPosition = Mathf.Clamp(pos.x, cannonData.minX, cannonData.maxX);
             position = new Vector3(xPosition, 0f, 0f);
-
+           
             //Spawn Minions
-            //SpawnMinions(SMALL_RUNNER);
+            cannonData.SpawnMinions(SMALL_RUNNER, spawnPoint);
 
             transform.localPosition = position;
         }
@@ -70,11 +92,11 @@ public class CannonScript : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (bigGuyLauncherSliderUI.isBarFilled)
+        if (bigGuyLauncherSliderUI.isBarFilled && !CannonMovementScript.isMoving)
         {
-            //SpawnSpeacialMinion(BIG_RUNNER);
             bigGuyLauncherSliderUI.fillAmount = 0;
             bigGuyLauncherSliderUI.isBarFilled = false;
+            cannonData.SpawnSpecialMinion(BIG_RUNNER, spawnPoint);
         }
     }
 

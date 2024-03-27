@@ -44,12 +44,12 @@ public class MultiplierWallScript : MonoBehaviour
     }
 
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out IMultipliable multipliable))
         {
-            multipliable.MultiplyMinions(multiplyAmount, transform);
-            other.transform.position = new Vector3(0, 1000f, 0);
+            int instanceID = GetInstanceID();
+            multipliable.MultiplyMinions(multiplyAmount, transform , instanceID);
         }
     }
 

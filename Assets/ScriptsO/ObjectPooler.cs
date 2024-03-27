@@ -37,7 +37,7 @@ public class ObjectPooler : MonoBehaviour
 
             for (int i = 0; i < pool.spawnCount; i++)
             {
-                var obj = Instantiate(pool.gameObj.gameObject);
+                var obj = Instantiate(pool.gameObj.gameObject, new Vector3(0,2000f,0), Quaternion.identity);
                 obj.SetActive(false);
                 gameobjQueue.Enqueue(obj);
             }
@@ -58,6 +58,7 @@ public class ObjectPooler : MonoBehaviour
         obj.SetActive(true);
         obj.transform.position = position;
         obj.transform.rotation = rotation;
+
 
         PoolDict[tag].Enqueue(obj);
 

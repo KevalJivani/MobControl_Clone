@@ -77,11 +77,11 @@ public class GameManagerScript : MonoBehaviour
 
     }
 
-    private void OnDestroy()
-    {
-        if (instance = this)
-        {
-            instance = null;
-        }
-    }
+    //private void OnDestroy()
+    //{
+    //    if (instance = this)
+    //    {
+    //        instance = null;
+    //    }
+    //}
 }

@@ -1,24 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BigRunner : Character, IMultipliable
 {
     private Rigidbody rb;
     private GameManagerScript gmInstance;
 
+
+    [HideInInspector] public int cloningWallInstanceID = 0;
+
     private int healthBig;
+
+    private void Awake()
+    {
+        healthBig = Health;
+    }
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         gmInstance = GameManagerScript.Instance;
-        healthBig = Health;
     }
 
     private void OnEnable()
     {
         Health = healthBig;
+        cloningWallInstanceID = 0;
+    }
+
+    private void OnDisable()
+    {
+        cloningWallInstanceID = 0;
     }
 
     private void FixedUpdate()
@@ -37,7 +51,7 @@ public class BigRunner : Character, IMultipliable
         otherGameObj.Health -= AttackPower;
         otherGameObj.TakeDamage(AttackPower);
 
-        Debug.Log("Attacking " + otherGameObj.name);
+        //Debug.Log("Attacking " + otherGameObj.name);
         if (otherGameObj.Health <= 0)
         {
             coll.gameObject.SetActive(false);
@@ -50,7 +64,7 @@ public class BigRunner : Character, IMultipliable
         Health -= attackPower;
         if (Health <= 0)
         {
-            Debug.Log("taking Damage " + name);
+            //Debug.Log("taking Damage " + name);
             gameObject.SetActive(false);
             transform.position = DequedObjectPos;
         }
@@ -64,7 +78,7 @@ public class BigRunner : Character, IMultipliable
                 if (other.gameObject.CompareTag("Player"))
                 {
                     Attack(other);
-                    Debug.Log("Attack Player");
+                    // Debug.Log("Attack Player");
 
                 }
 
@@ -74,7 +88,7 @@ public class BigRunner : Character, IMultipliable
                 if (other.gameObject.CompareTag("Enemy"))
                 {
                     Attack(other);
-                    Debug.Log("Attack Enemy");
+                    // Debug.Log("Attack Enemy");
                 }
                 break;
 
@@ -83,26 +97,31 @@ public class BigRunner : Character, IMultipliable
         }
     }
 
-    public void MultiplyMinions(int multiplynumber, Transform objTransform)
+    public void MultiplyMinions(int multiplynumber, Transform objTransform, int instanceID)
     {
-        if (characterType == CharacterType.Enemy) return;
+        if (characterType == CharacterType.Enemy || cloningWallInstanceID == instanceID) return;
 
         int multiplier = multiplynumber;
 
         for (int i = 0; i < multiplier; i++)
         {
-            var rnd = Random.Range(-1f, 1f);
-            Vector3 newPosition = transform.position + new Vector3(rnd, 0, 0.05f);
+            var rnd = Random.Range(-2f, 2f);
+            Vector3 newPosition = transform.position + new Vector3(rnd, 0, 0);
 
             string originalString = name;
             string modifiedString = originalString.Replace("(Clone)", "");
 
-            var cloneSmall = ObjectPooler.Instance.SpawnObjectFromPool(modifiedString, newPosition, transform.rotation);
+            var cloneBig = ObjectPooler.Instance.SpawnObjectFromPool(modifiedString, newPosition, transform.rotation);
+            cloneBig.GetComponent<BigRunner>().cloningWallInstanceID = instanceID;
+
             if (gmInstance.GamePartsList.Count > 0)
             {
-                cloneSmall.transform.SetParent(gmInstance.GamePartsList[0].transform);
+                cloneBig.transform.SetParent(gmInstance.GamePartsList[0].transform);
                 //Debug.Log(modifiedString + " The multiplied Prefab");
             }
         }
+
+        gameObject.SetActive(false);
+        transform.position = new Vector3(0, 1000f, 0);
     }
 }
