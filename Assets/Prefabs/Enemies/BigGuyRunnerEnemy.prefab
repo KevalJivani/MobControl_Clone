@@ -1219,7 +1219,6 @@ GameObject:
   - component: {fileID: 7011457911287689903}
   - component: {fileID: 937447865526537610}
   - component: {fileID: 6951201563496354965}
-  - component: {fileID: 3176547989581664644}
   - component: {fileID: 6868606761703269814}
   m_Layer: 0
   m_Name: BigGuyRunnerEnemy
@@ -1288,10 +1287,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 116
+  m_Constraints: 84
   m_CollisionDetection: 1
 --- !u!136 &6951201563496354965
 CapsuleCollider:
@@ -1316,29 +1315,6 @@ CapsuleCollider:
   m_Height: 6.02
   m_Direction: 1
   m_Center: {x: -0.051320314, y: 2.6628726, z: 0.5516944}
---- !u!136 &3176547989581664644
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7224657328424833389}
-  m_Material: {fileID: 13400000, guid: d4eea297fd4c0c94b87401d0d057c9a8, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.0645242
-  m_Height: 6.325745
-  m_Direction: 1
-  m_Center: {x: -0.051320314, y: 2.6628726, z: 0.5516944}
 --- !u!114 &6868606761703269814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1355,6 +1331,7 @@ MonoBehaviour:
   Health: 15
   MovementSpeed: 11
   AttackPower: 5
+  cloningWallInstanceID: 0
 --- !u!1 &7306006173056566382
 GameObject:
   m_ObjectHideFlags: 0

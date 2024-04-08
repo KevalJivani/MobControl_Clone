@@ -1,6 +1,6 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -19,13 +19,10 @@ public class ObjectPooler : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Destroy(instance);
-        }
-        else
-        {
-            instance = this;
+            Destroy(instance.gameObject);
         }
 
+        instance = this;
     }
 
     private void Start()
@@ -37,13 +34,16 @@ public class ObjectPooler : MonoBehaviour
 
             for (int i = 0; i < pool.spawnCount; i++)
             {
-                var obj = Instantiate(pool.gameObj.gameObject, new Vector3(0,2000f,0), Quaternion.identity);
+                var obj = Instantiate(pool.gameObj.gameObject, new Vector3(0, 2000f, 0), Quaternion.identity);
+                obj.transform.SetParent(transform);
                 obj.SetActive(false);
                 gameobjQueue.Enqueue(obj);
+                //Debug.Log("instantiating Player");
             }
 
             PoolDict.Add(pool.objName, gameobjQueue);
         }
+
     }
 
     public GameObject SpawnObjectFromPool(string tag, Vector3 position, Quaternion rotation)
@@ -59,7 +59,6 @@ public class ObjectPooler : MonoBehaviour
         obj.transform.position = position;
         obj.transform.rotation = rotation;
 
-
         PoolDict[tag].Enqueue(obj);
 
         return obj;
@@ -67,10 +66,12 @@ public class ObjectPooler : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (instance = this)
+        if (instance == this)
         {
             instance = null;
         }
+
+        PoolDict.Clear();
     }
 
     [System.Serializable]

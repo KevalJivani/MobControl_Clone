@@ -1,8 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-using System;
 
 public class CameraShake : MonoBehaviour
 {
@@ -33,8 +33,6 @@ public class CameraShake : MonoBehaviour
             }
             //Debug.Log("VirtualCameraPresent " + virtualCamera.name);
         }
-
-        //ShakeCamera();
     }
 
     private void Start()
@@ -49,14 +47,13 @@ public class CameraShake : MonoBehaviour
             noise.m_AmplitudeGain = amplitude;
             noise.m_FrequencyGain = frequency;
 
-            Debug.Log("NoisePresent");
+            //Debug.Log("NoisePresent");
             StartCoroutine(StopShake(shakeDuration));
         }
         else
         {
             Debug.LogWarning("Noise is Null");
         }
-
     }
 
     private IEnumerator StopShake(float shakeDuration)

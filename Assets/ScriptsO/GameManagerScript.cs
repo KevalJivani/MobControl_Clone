@@ -1,25 +1,22 @@
 using System;
-using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManagerScript : MonoBehaviour
 {
+    public Action<GameObject> OnLevelInstantiated;
+    public Action OnLevelCompleted;
+
+    [HideInInspector] public const string LEVEL_NO = "LevelNo";
+    [HideInInspector] public int levelNo = 1;
+
+    public LevelDataListSO LevelDataListSO;
+
     private static GameManagerScript instance;
 
     public static GameManagerScript Instance
     {
         get { return instance; }
     }
-
-    public int gamePartNo = 0;
-
-    public List<GameObject> GamePartsList;
-
-    public Action OnGameCompleted;
-    public bool isGameComplete;
-
 
     private void Awake()
     {
@@ -33,55 +30,21 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void InstantiateLevel()
     {
-        foreach (var part in GamePartsList)
+        levelNo = PlayerPrefs.GetInt(LEVEL_NO, 1);
+
+        if (levelNo > 0 && levelNo <= LevelDataListSO.LevelsDataList.Count)
         {
-            part.SetActive(false);
+            GameObject obj = LevelDataListSO.LevelsDataList.Find(x => x.LevelNumber == levelNo).LevelGameObj;
+           var instantiatedLevel = Instantiate(obj, transform.position, Quaternion.identity);
+            OnLevelInstantiated?.Invoke(instantiatedLevel);
         }
-        GamePartsList[0].SetActive(true);
     }
 
-    private void OnEnable()
+    public void SaveData()
     {
-        CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
+        PlayerPrefs.SetInt(LEVEL_NO, levelNo);
+        PlayerPrefs.Save();
     }
-
-    private void OnDisable()
-    {
-        CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
-    }
-
-    private void CastleManager_OnCastleDestroyed(GameObject destroyedCastleObj)
-    {
-
-        foreach (var gamePart in GamePartsList)
-        {
-            var castleObj = gamePart.GetComponentInChildren<CastleScript>().gameObject;
-            if (castleObj == destroyedCastleObj)
-            {
-                Debug.Log("The Castle to be destroyed " + castleObj.name);
-                gamePart.SetActive(false);
-                GamePartsList.Remove(gamePart);
-                if (GamePartsList.Count <= 0)
-                {
-                    Debug.Log("CompletedGameManager");
-                    isGameComplete = true;
-                    OnGameCompleted?.Invoke();
-                    return;
-                }
-                GamePartsList[0].SetActive(true);
-                return;
-            }
-        }
-
-    }
-
-    //private void OnDestroy()
-    //{
-    //    if (instance = this)
-    //    {
-    //        instance = null;
-    //    }
-    //}
 }

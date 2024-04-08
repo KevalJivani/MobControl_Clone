@@ -8,10 +8,11 @@ public class BigRunner : Character, IMultipliable
     private Rigidbody rb;
     private GameManagerScript gmInstance;
 
-
     [HideInInspector] public int cloningWallInstanceID = 0;
 
     private int healthBig;
+
+    private LevelDataScript currLevelData;
 
     private void Awake()
     {
@@ -28,11 +29,20 @@ public class BigRunner : Character, IMultipliable
     {
         Health = healthBig;
         cloningWallInstanceID = 0;
+
+        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
     }
 
     private void OnDisable()
     {
         cloningWallInstanceID = 0;
+
+        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
+    }
+
+    private void GameManagerScript_OnLevelInstantiated(GameObject instantiatedLevel)
+    {
+        currLevelData = instantiatedLevel.GetComponent<LevelDataScript>();
     }
 
     private void FixedUpdate()
@@ -97,7 +107,7 @@ public class BigRunner : Character, IMultipliable
         }
     }
 
-    public void MultiplyMinions(int multiplynumber, Transform objTransform, int instanceID)
+    public void MultiplyMinions(int multiplynumber, LevelDataScript currLevelData, int instanceID)
     {
         if (characterType == CharacterType.Enemy || cloningWallInstanceID == instanceID) return;
 
@@ -114,9 +124,9 @@ public class BigRunner : Character, IMultipliable
             var cloneBig = ObjectPooler.Instance.SpawnObjectFromPool(modifiedString, newPosition, transform.rotation);
             cloneBig.GetComponent<BigRunner>().cloningWallInstanceID = instanceID;
 
-            if (gmInstance.GamePartsList.Count > 0)
+            if (currLevelData.LevelPartsList.Count > 0)
             {
-                cloneBig.transform.SetParent(gmInstance.GamePartsList[0].transform);
+                cloneBig.transform.SetParent(currLevelData.LevelPartsList[0].transform);
                 //Debug.Log(modifiedString + " The multiplied Prefab");
             }
         }

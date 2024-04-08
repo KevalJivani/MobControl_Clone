@@ -4,7 +4,6 @@ public class NormalRunner : Character, IMultipliable
 {
 
     private Rigidbody rb;
-    private GameManagerScript gmInstance;
 
     [HideInInspector] public int cloningWallInstanceID = 0;
 
@@ -17,19 +16,12 @@ public class NormalRunner : Character, IMultipliable
 
     void Start()
     {
-        gmInstance = GameManagerScript.Instance;
         rb = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
     {
         Health = health;
-        cloningWallInstanceID = 0;
-    }
-
-    private void OnDisable()
-    {
-        cloningWallInstanceID = 0;
     }
 
     private void FixedUpdate()
@@ -68,7 +60,6 @@ public class NormalRunner : Character, IMultipliable
         }
     }
 
-
     private void OnCollisionEnter(Collision collsion)
     {
         switch (characterType)
@@ -95,7 +86,7 @@ public class NormalRunner : Character, IMultipliable
         }
     }
 
-    public void MultiplyMinions(int multiplynumber, Transform objTransform, int instanceID)
+    public void MultiplyMinions(int multiplynumber, LevelDataScript currLevelData, int instanceID)
     {
         if (characterType == CharacterType.Enemy || cloningWallInstanceID == instanceID) return;
         //Debug.Log(name);
@@ -109,13 +100,13 @@ public class NormalRunner : Character, IMultipliable
             string originalString = name;
             string modifiedString = originalString.Replace("(Clone)", "");
 
+            //Debug.Log("prefabInstantiated");
             var cloneSmall = ObjectPooler.Instance.SpawnObjectFromPool(modifiedString, newPosition, transform.rotation);
             cloneSmall.GetComponent<NormalRunner>().cloningWallInstanceID = instanceID;
 
-            if (gmInstance.GamePartsList.Count > 0)
+            if (currLevelData.LevelPartsList.Count > 0)
             {
-                cloneSmall.transform.SetParent(gmInstance.GamePartsList[0].transform);
-                //Debug.Log(modifiedString + " The multiplied Prefab");
+                cloneSmall.transform.SetParent(currLevelData.LevelPartsList[0].transform);
             }
         }
 

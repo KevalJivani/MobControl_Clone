@@ -6,17 +6,24 @@ using UnityEngine.UI;
 
 public class WinPanelUIScript : MonoBehaviour
 {
-    [SerializeField] private Button mainMenuButton;
+    [SerializeField] private Button nextLevelButton;
+
+    private GameManagerScript gmInstance;
 
     private void Start()
     {
         Hide();
-        mainMenuButton.onClick.AddListener(() =>
+
+        gmInstance = GameManagerScript.Instance;
+
+        nextLevelButton.onClick.AddListener(() =>
         {
-            Debug.Log("MainMenu Button Clicked");
+            Debug.Log("NextLevel Button Clicked");
+            NextLevelFunc();
+
             Hide();
 
-            var currScene = SceneManager.GetActiveScene().buildIndex;
+            /*var currScene = SceneManager.GetActiveScene().buildIndex;
             if (currScene <= SceneManager.sceneCount)
             {
                 SceneManager.LoadScene(currScene + 1);
@@ -25,7 +32,7 @@ public class WinPanelUIScript : MonoBehaviour
             {
                 var loadScene = Random.Range(0, SceneManager.sceneCount - 1);
                 SceneManager.LoadScene(loadScene);
-            }
+            }*/
         });
     }
 
@@ -37,5 +44,16 @@ public class WinPanelUIScript : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    private void NextLevelFunc()
+    {
+        gmInstance.levelNo++;
+        gmInstance.SaveData();
+
+        var obj = FindObjectOfType<LevelDataScript>().gameObject;
+        Destroy(obj);
+
+        gmInstance.InstantiateLevel();
     }
 }

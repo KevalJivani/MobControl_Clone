@@ -18,15 +18,14 @@ public class EnemySpawnerScript : MonoBehaviour
 
     private bool canSpawn;
 
-    private void Start()
-    {
-        //InvokeRepeating("SpawnEnemy", 0f, spawnAfterTime);
-    }
+    private LevelDataScript currLevelData;
+
 
     private void OnEnable()
     {
         CannonMovementScript.OnMovementCompleted += CannonScript_OnMovementCompleted;
         BaseLineScript.OnGameFailed += BaseLineScript_OnLevelFailed;
+        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
     }
 
 
@@ -34,11 +33,17 @@ public class EnemySpawnerScript : MonoBehaviour
     {
         CannonMovementScript.OnMovementCompleted -= CannonScript_OnMovementCompleted;
         BaseLineScript.OnGameFailed -= BaseLineScript_OnLevelFailed;
+        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
     }
 
     private void BaseLineScript_OnLevelFailed()
     {
         isCannonPlaced = false;
+    }
+
+    private void GameManagerScript_OnLevelInstantiated(GameObject instantiatedGameObj)
+    {
+        currLevelData = instantiatedGameObj.GetComponent<LevelDataScript>();
     }
 
     private void CannonScript_OnMovementCompleted()
@@ -72,12 +77,14 @@ public class EnemySpawnerScript : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        int rnd = Random.Range(-5, 5);
-        GameObject enemySmall = ObjectPooler.Instance.SpawnObjectFromPool(ENEMYSMALL_PREFAB, transform.position + new Vector3(rnd, 0, 0), transform.rotation);
-        enemySmall.transform.SetParent(GameManagerScript.Instance.GamePartsList[0].transform);
+        int rnd = Random.Range(-2, 2);
+        GameObject enemySmall = ObjectPooler.Instance.SpawnObjectFromPool(ENEMYSMALL_PREFAB,
+            transform.position + new Vector3(rnd, 0, 0), transform.rotation);
+
+        enemySmall.transform.SetParent(currLevelData.LevelPartsList[0].transform);
 
         var rb = enemySmall.GetComponent<Rigidbody>();
-        StartCoroutine(ApplyForce(rb));
+        //StartCoroutine(ApplyForce(rb));
     }
 
     IEnumerator ApplyForce(Rigidbody rb)
@@ -94,5 +101,4 @@ public class EnemySpawnerScript : MonoBehaviour
         lastFlowTime = Time.time;
         canSpawn = false;
     }
-
 }

@@ -32,7 +32,7 @@ public class BaseLineScript : MonoBehaviour
     {
         Time.timeScale = 0.2f;
         cameraShake.ShakeCamera(shakeDuration: 0.2f);
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1;
     }
 }

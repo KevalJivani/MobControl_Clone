@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BigGuyLauncherSliderUI : MonoBehaviour
 {
-    //public event Action OnBigGuySliderFull;
-
     private Slider slider;
 
     [SerializeField] private Image fillImage;
@@ -16,36 +15,37 @@ public class BigGuyLauncherSliderUI : MonoBehaviour
     [SerializeField] private Sprite completedSprite;
     [SerializeField] private Sprite normalSprite;
 
-    [HideInInspector] public int fillAmount;
+    [HideInInspector] public float fillAmount;
     [HideInInspector] public bool isBarFilled;
 
-
-    public int SliderMaxValue;
+    public float SliderMaxValue;
 
     private void Start()
     {
         slider = GetComponent<Slider>();
         slider.maxValue = SliderMaxValue;
         fillImage.sprite = normalSprite;
-    }
-
-    private void Update()
-    {
-        UpdateUIValue();
+        slider.value = fillAmount;
     }
 
     public void UpdateUIValue()
     {
-        if (fillAmount == slider.maxValue)
+        if (fillAmount == slider.maxValue && isBarFilled != true)
         {
-            fillImage.sprite = completedSprite;
-            isBarFilled = true;
+            DOTween.To(() => slider.value, x => slider.value = x, fillAmount, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                fillImage.sprite = completedSprite;
+                isBarFilled = true;
+            });
         }
-        else
+        else if (fillAmount < slider.maxValue)
         {
-            fillImage.sprite = normalSprite;
-        }
+            DOTween.To(() => slider.value, x => slider.value = x, fillAmount, 0.2f).SetEase(Ease.Linear);
 
-        slider.value = fillAmount;
+            if (isBarFilled != true)
+            {
+                fillImage.sprite = normalSprite;
+            }
+        }
     }
 }

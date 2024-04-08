@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
 public class RotateScript : MonoBehaviour
 {
@@ -55,5 +54,4 @@ public class RotateScript : MonoBehaviour
         yield return new WaitForSeconds(waitDuration);
         StartCoroutine(RotateObject());
     }
-
 }

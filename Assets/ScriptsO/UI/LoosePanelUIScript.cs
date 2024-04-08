@@ -13,10 +13,11 @@ public class LoosePanelUIScript : MonoBehaviour
         Hide();
         restartButton.onClick.AddListener(() =>
         {
+            ReloadFunc();
             Debug.Log("Restart Button Clicked");
             Hide();
-            var currScene = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currScene);
+            //var currScene = SceneManager.GetActiveScene().buildIndex;
+            //SceneManager.LoadScene(currScene);
         });
     }
 
@@ -28,5 +29,13 @@ public class LoosePanelUIScript : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    private void ReloadFunc()
+    {
+        var obj = FindObjectOfType<LevelDataScript>().gameObject;
+        Destroy(obj);
+
+        GameManagerScript.Instance.InstantiateLevel();
     }
 }
