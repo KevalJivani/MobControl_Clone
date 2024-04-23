@@ -11,25 +11,20 @@ public class CinemachineAdjusterScript : MonoBehaviour
     [Space(10)]
     [SerializeField] private List<CinemachineVirtualCamera> levelPartsVirtualCameraList;
 
-
     private int cameraNo;
 
-    private void Start()
-    {
-
-    }
 
     private void OnEnable()
     {
-        CannonMovementScript.OnMovementCompleted += CannonScript_OnMovementCompleted;
-        CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
+        EventManager.cannonEvents.OnMovementCompleted.Get().AddListener(CannonScript_OnMovementCompleted);
+        EventManager.castleEvents.OnCastleDestroyed.Get().AddListener(CastleManager_OnCastleDestroyed);
     }
 
 
     private void OnDisable()
     {
-        CannonMovementScript.OnMovementCompleted -= CannonScript_OnMovementCompleted;
-        CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
+        EventManager.cannonEvents.OnMovementCompleted.Get().RemoveListener(CannonScript_OnMovementCompleted);
+        EventManager.castleEvents.OnCastleDestroyed.Get().RemoveListener(CastleManager_OnCastleDestroyed);
     }
 
     private void CastleManager_OnCastleDestroyed(GameObject obj)

@@ -1073,8 +1073,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterType: 1
   Health: 1
-  MovementSpeed: 9
+  maxMovementSpeed: 421
+  minMovementSpeed: 114
   AttackPower: 1
+  Speed: 0
   cloningWallInstanceID: 0
 --- !u!1 &6291480013411386027
 GameObject:

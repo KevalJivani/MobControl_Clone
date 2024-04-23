@@ -473,6 +473,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelNo: 1
   LevelDataListSO: {fileID: 0}
+  neighbourDistance: 0
+  rotationSpeed: 0
+  PlayersActiveInScene: []
+  EnemiesActiveInScene: []
 --- !u!4 &631671138
 Transform:
   m_ObjectHideFlags: 0
@@ -1257,6 +1261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   winPanel: {fileID: 1315546834}
   loosePanel: {fileID: 1278681469}
+  coinsPanel: {fileID: 0}
 --- !u!1 &1278681465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,6 +1666,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1134670236797316966, guid: daf96ade3c3644a1a970b5d843121149, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418616368987153495, guid: daf96ade3c3644a1a970b5d843121149, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418616368987153495, guid: daf96ade3c3644a1a970b5d843121149, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}

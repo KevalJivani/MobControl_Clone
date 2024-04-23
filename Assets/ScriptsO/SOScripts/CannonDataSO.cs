@@ -6,8 +6,8 @@ using UnityEngine.UIElements;
 [CreateAssetMenu(fileName = "CannonSO", menuName = "CannonData/Cannon")]
 public class CannonDataSO : ScriptableObject
 {
-    public event Action OnNormalCharacterSpawned;
-    public event Action OnSpecialCharacterSpawned;
+    //public event Action OnNormalCharacterSpawned;
+    //public event Action OnSpecialCharacterSpawned;
 
     [Space(10)]
     [Header("Range of Cannon Movement")]
@@ -38,6 +38,8 @@ public class CannonDataSO : ScriptableObject
                 var spawnedGameObj = ObjectPooler.Instance.SpawnObjectFromPool(minionName,
                     new Vector3(spawnPoint.position.x + Offset, spawnPoint.position.y, spawnPoint.position.z + Offset), spawnPoint.rotation);
 
+                GameManagerScript.Instance.PlayersActiveInScene.Add(spawnedGameObj);
+
                 if (currLevelData.LevelPartsList.Count > 0)
                 {
                     spawnedGameObj.transform.SetParent(currLevelData.LevelPartsList[0].transform);
@@ -45,7 +47,9 @@ public class CannonDataSO : ScriptableObject
             }
 
             //Debug.Log("Spawned");
-            OnNormalCharacterSpawned?.Invoke();
+            //OnNormalCharacterSpawned?.Invoke();
+            EventManager.cannonEvents.OnNormalCharacterSpawned.Get()?.Invoke();
+
             lastSpawnTime = Time.time;
         }
     }
@@ -58,6 +62,8 @@ public class CannonDataSO : ScriptableObject
         {
             spawnedGameObj.transform.SetParent(currLevelData.LevelPartsList[0].transform);
         }
-        OnSpecialCharacterSpawned?.Invoke();
+        //OnSpecialCharacterSpawned?.Invoke();
+        EventManager.cannonEvents.OnSpecialCharacterSpawned.Get()?.Invoke();
+
     }
 }

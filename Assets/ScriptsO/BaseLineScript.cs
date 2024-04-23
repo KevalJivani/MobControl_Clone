@@ -7,8 +7,6 @@ public class BaseLineScript : MonoBehaviour
 {
     private bool gameEnded;
 
-    public static Action OnGameFailed;
-
     private CameraShake cameraShake;
 
     private void Start()
@@ -21,7 +19,7 @@ public class BaseLineScript : MonoBehaviour
         if (!other.TryGetComponent(out Character character)) return;
         if (character.characterType == Character.CharacterType.Enemy && !gameEnded)
         {
-            OnGameFailed?.Invoke();
+            EventManager.gameManagerEvents.OnGameFailed.Get()?.Invoke();
             StartCoroutine(GameEndedFunc());
             gameEnded = true;
             Debug.Log("GameEnded");

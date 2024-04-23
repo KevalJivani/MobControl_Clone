@@ -52,3 +52,6 @@ MonoBehaviour:
   - LevelName: Level_13
     LevelNumber: 13
     LevelGameObj: {fileID: 1609517167974707698, guid: 940925d3295344d65bb0b3253a4c9189, type: 3}
+  - LevelName: Level_14
+    LevelNumber: 14
+    LevelGameObj: {fileID: 8070143006431223510, guid: 5d545c8eda7e94cb98208daffb90c9fa, type: 3}

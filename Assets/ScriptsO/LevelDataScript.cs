@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -21,12 +19,12 @@ public class LevelDataScript : MonoBehaviour
 
     private void OnEnable()
     {
-        CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
+        EventManager.castleEvents.OnCastleDestroyed.Get().AddListener(CastleManager_OnCastleDestroyed);
     }
 
     private void OnDisable()
     {
-        CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
+        EventManager.castleEvents.OnCastleDestroyed.Get().RemoveListener(CastleManager_OnCastleDestroyed);
     }
 
     private void CastleManager_OnCastleDestroyed(GameObject destroyedCastleObj)
@@ -36,7 +34,7 @@ public class LevelDataScript : MonoBehaviour
 
     private void LoadNextLevel(GameObject destroyedCastleObj)
     {
-        DOVirtual.DelayedCall(0.1f, () =>
+        DOVirtual.DelayedCall(0.3f, () =>
         {
             foreach (var gamePart in LevelPartsList)
             {
@@ -49,7 +47,9 @@ public class LevelDataScript : MonoBehaviour
                     if (LevelPartsList.Count <= 0)
                     {
                         Debug.Log("CompletedGameManager");
-                        GameManagerScript.Instance.OnLevelCompleted?.Invoke();
+
+                        EventManager.gameManagerEvents.OnLevelCompleted.Get()?.Invoke();
+
                         return;
                     }
                     LevelPartsList[0].SetActive(true);

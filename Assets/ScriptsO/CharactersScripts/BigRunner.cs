@@ -6,13 +6,11 @@ using DG.Tweening;
 public class BigRunner : Character, IMultipliable
 {
     private Rigidbody rb;
-    private GameManagerScript gmInstance;
 
     [HideInInspector] public int cloningWallInstanceID = 0;
 
     private int healthBig;
 
-    private LevelDataScript currLevelData;
 
     private void Awake()
     {
@@ -22,27 +20,17 @@ public class BigRunner : Character, IMultipliable
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        gmInstance = GameManagerScript.Instance;
     }
 
     private void OnEnable()
     {
         Health = healthBig;
         cloningWallInstanceID = 0;
-
-        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
     }
 
     private void OnDisable()
     {
         cloningWallInstanceID = 0;
-
-        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
-    }
-
-    private void GameManagerScript_OnLevelInstantiated(GameObject instantiatedLevel)
-    {
-        currLevelData = instantiatedLevel.GetComponent<LevelDataScript>();
     }
 
     private void FixedUpdate()
@@ -52,7 +40,7 @@ public class BigRunner : Character, IMultipliable
 
     public override void Move()
     {
-        rb.velocity = transform.forward * MovementSpeed;
+        rb.velocity = transform.forward * MovementSpeed * Time.deltaTime;
     }
 
     public override void Attack(Collision coll)
@@ -60,7 +48,6 @@ public class BigRunner : Character, IMultipliable
         var otherGameObj = coll.gameObject.GetComponent<Character>();
         otherGameObj.Health -= AttackPower;
         otherGameObj.TakeDamage(AttackPower);
-
         //Debug.Log("Attacking " + otherGameObj.name);
         if (otherGameObj.Health <= 0)
         {
@@ -89,7 +76,6 @@ public class BigRunner : Character, IMultipliable
                 {
                     Attack(other);
                     // Debug.Log("Attack Player");
-
                 }
 
                 break;

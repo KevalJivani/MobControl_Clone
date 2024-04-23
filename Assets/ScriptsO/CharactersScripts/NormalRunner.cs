@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class NormalRunner : Character, IMultipliable
 {
-
     private Rigidbody rb;
-
+   
     [HideInInspector] public int cloningWallInstanceID = 0;
 
     private int health;
@@ -16,6 +15,7 @@ public class NormalRunner : Character, IMultipliable
 
     void Start()
     {
+        //Speed = MovementSpeed;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -26,13 +26,72 @@ public class NormalRunner : Character, IMultipliable
 
     private void FixedUpdate()
     {
-        Move();
+        //FlockFunction();
+        Flocking(gameObject);
+        //Move();
     }
 
     public override void Move()
     {
-        rb.velocity = transform.forward * MovementSpeed;
+        rb.velocity = transform.forward * MovementSpeed * Time.deltaTime;
     }
+
+    public override void Flocking(GameObject characterObj)
+    {
+        base.Flocking(characterObj);
+    }
+
+    //private void FlockFunction()
+    //{
+    //    var normalRunnerList = FlockingManager.Instance.prefabsList;
+
+    //    Vector3 groupCenter = Vector3.zero;
+    //    Vector3 prefabAvoid = Vector3.zero;
+    //    float groupSpeed = 0.01f;
+    //    float prefabDistance;
+    //    int groupSize = 0;
+
+    //    foreach (var smallRunner in normalRunnerList)
+    //    {
+    //        if (smallRunner == this.gameObject) continue;
+    //        prefabDistance = Vector3.Distance(smallRunner.transform.position, transform.position);
+    //        if (prefabDistance <= FlockingManager.Instance.neighbourDistance)
+    //        {
+    //            groupCenter += smallRunner.transform.position;
+    //            groupSize++;
+
+    //            if (prefabDistance < 3.0f)
+    //            {
+    //                prefabAvoid += (transform.position - smallRunner.transform.position);
+    //            }
+
+    //            groupSpeed += smallRunner.GetComponent<NormalRunner>().Speed;
+    //        }
+    //    }
+
+    //    if (groupSize > 0)
+    //    {
+    //        groupCenter = groupCenter / groupSize + (FlockingManager.Instance.Goal.position - transform.position);
+
+    //        Speed = groupSpeed / groupSize;
+    //        if (Speed > maxMovementSpeed) Speed = maxMovementSpeed;
+
+    //        Vector3 direction = (groupCenter + prefabAvoid) - transform.position;
+    //        direction.Normalize();
+
+    //        if (direction != Vector3.zero)
+    //        {
+    //            transform.rotation = Quaternion.Slerp(transform.rotation,
+    //                Quaternion.LookRotation(direction), FlockingManager.Instance.rotationSpeed * Time.deltaTime);
+    //        }
+    //        rb.velocity = Speed * Time.deltaTime * direction;
+    //    }
+    //    else
+    //    {
+    //        rb.velocity = transform.forward * Speed * Time.deltaTime;
+    //    }
+
+    //}
 
     public override void Attack(Collision coll)
     {
@@ -46,10 +105,21 @@ public class NormalRunner : Character, IMultipliable
         {
             coll.gameObject.SetActive(false);
             coll.transform.position = DequedObjectPos;
+
+            if (otherGameObj.characterType == CharacterType.Player)
+            {
+                var templist = GameManagerScript.Instance.PlayersActiveInScene;
+                if (templist.Contains(coll.gameObject)) templist.Remove(coll.gameObject);
+            }
+            else if (otherGameObj.characterType == CharacterType.Enemy)
+            {
+                var templist = GameManagerScript.Instance.EnemiesActiveInScene;
+                if (templist.Contains(coll.gameObject)) templist.Remove(coll.gameObject);
+            }
         }
     }
 
-    public override void TakeDamage( int attackPower)
+    public override void TakeDamage(int attackPower)
     {
         //Debug.Log("taking Damage " + name);
         Health -= attackPower;
@@ -57,6 +127,17 @@ public class NormalRunner : Character, IMultipliable
         {
             gameObject.SetActive(false);
             transform.position = DequedObjectPos;
+
+            if (characterType == CharacterType.Player)
+            {
+                var templist = GameManagerScript.Instance.PlayersActiveInScene;
+                if (templist.Contains(gameObject)) templist.Remove(gameObject);
+            }
+            else if (characterType == CharacterType.Enemy)
+            {
+                var templist = GameManagerScript.Instance.EnemiesActiveInScene;
+                if (templist.Contains(gameObject)) templist.Remove(gameObject);
+            }
         }
     }
 
@@ -103,6 +184,9 @@ public class NormalRunner : Character, IMultipliable
             //Debug.Log("prefabInstantiated");
             var cloneSmall = ObjectPooler.Instance.SpawnObjectFromPool(modifiedString, newPosition, transform.rotation);
             cloneSmall.GetComponent<NormalRunner>().cloningWallInstanceID = instanceID;
+
+            var templist = GameManagerScript.Instance.PlayersActiveInScene;
+            templist.Add(cloneSmall);
 
             if (currLevelData.LevelPartsList.Count > 0)
             {

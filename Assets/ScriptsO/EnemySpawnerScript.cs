@@ -23,20 +23,19 @@ public class EnemySpawnerScript : MonoBehaviour
 
     private void OnEnable()
     {
-        CannonMovementScript.OnMovementCompleted += CannonScript_OnMovementCompleted;
-        BaseLineScript.OnGameFailed += BaseLineScript_OnLevelFailed;
-        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
+        EventManager.cannonEvents.OnMovementCompleted.Get().AddListener(CannonScript_OnMovementCompleted);
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().AddListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.gameManagerEvents.OnGameFailed.Get().AddListener(GameManagerScript_OnLevelFailed);
     }
-
 
     private void OnDisable()
     {
-        CannonMovementScript.OnMovementCompleted -= CannonScript_OnMovementCompleted;
-        BaseLineScript.OnGameFailed -= BaseLineScript_OnLevelFailed;
-        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
+        EventManager.cannonEvents.OnMovementCompleted.Get().RemoveListener(CannonScript_OnMovementCompleted);
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().RemoveListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.gameManagerEvents.OnGameFailed.Get().RemoveListener(GameManagerScript_OnLevelFailed);
     }
 
-    private void BaseLineScript_OnLevelFailed()
+    private void GameManagerScript_OnLevelFailed()
     {
         isCannonPlaced = false;
     }
@@ -82,6 +81,8 @@ public class EnemySpawnerScript : MonoBehaviour
             transform.position + new Vector3(rnd, 0, 0), transform.rotation);
 
         enemySmall.transform.SetParent(currLevelData.LevelPartsList[0].transform);
+
+        GameManagerScript.Instance.EnemiesActiveInScene.Add(enemySmall);
 
         var rb = enemySmall.GetComponent<Rigidbody>();
         //StartCoroutine(ApplyForce(rb));

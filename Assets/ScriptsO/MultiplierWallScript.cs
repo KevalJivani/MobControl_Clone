@@ -48,8 +48,6 @@ public class MultiplierWallScript : MonoBehaviour
         transform.localPosition = new Vector3(posX, transform.localPosition.y, transform.localPosition.z);
     }
 
-
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out IMultipliable multipliable))

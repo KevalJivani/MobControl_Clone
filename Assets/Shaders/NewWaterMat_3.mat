@@ -68,7 +68,7 @@ Material:
     - _TextureVisibility: 0.524
     - _WaterDeep: 0
     - _WaterDepth: 0
-    - _WaterHeight: 3
+    - _WaterHeight: 4.2
     - _WaterMinAlpha: 0
     m_Colors:
     - _BorderColor: {r: 1, g: 1, b: 1, a: 1}

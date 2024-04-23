@@ -2300,7 +2300,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3644615182904002655, guid: b37b72c64c49c7340a2ab88bb23359cb, type: 3}
       propertyPath: castleHealth
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3827777450388456725, guid: b37b72c64c49c7340a2ab88bb23359cb, type: 3}
       propertyPath: m_LocalScale.x
@@ -3782,7 +3782,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3644615182904002655, guid: b37b72c64c49c7340a2ab88bb23359cb, type: 3}
       propertyPath: castleHealth
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3827777450388456725, guid: b37b72c64c49c7340a2ab88bb23359cb, type: 3}
       propertyPath: m_LocalScale.x

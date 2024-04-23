@@ -15,10 +15,10 @@ public class CameraShake : MonoBehaviour
 
     private void OnEnable()
     {
-        BaseLineScript.OnGameFailed += BaseLineScript_OnLevelFailed;
+        EventManager.gameManagerEvents.OnGameFailed.Get().AddListener(GamemangerScript_OnLevelFailed);
     }
 
-    private void BaseLineScript_OnLevelFailed()
+    private void GamemangerScript_OnLevelFailed()
     {
         var vCam = GetComponent<CinemachineBrain>();
         virtualCamera = (CinemachineVirtualCamera)vCam.ActiveVirtualCamera;
@@ -33,11 +33,6 @@ public class CameraShake : MonoBehaviour
             }
             //Debug.Log("VirtualCameraPresent " + virtualCamera.name);
         }
-    }
-
-    private void Start()
-    {
-
     }
 
     public void ShakeCamera(float shakeDuration)

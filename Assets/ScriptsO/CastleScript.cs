@@ -54,17 +54,23 @@ public class CastleScript : MonoBehaviour
 
             if (castleHealth <= 0)
             {
-                OnCastleDestroyed?.Invoke(gameObject);
+                //OnCastleDestroyed?.Invoke(gameObject);
+                EventManager.castleEvents.OnCastleDestroyed.Get()?.Invoke(gameObject);
+
                 yield break;
             }
 
             character.Health--;
+            UIManager.BlockCount++;
             //Debug.Log("Character Health going down" + character.gameObject.name);
 
             if (character.Health <= 0)
             {
                 other.gameObject.SetActive(false);
                 other.transform.position = dequedObjectPos;
+
+                var templist = GameManagerScript.Instance.PlayersActiveInScene;
+                if (templist.Contains(other.gameObject)) templist.Remove(other.gameObject);
             }
             yield return new WaitForSeconds(hitTime);
         }

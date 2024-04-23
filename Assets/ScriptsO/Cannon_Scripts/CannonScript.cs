@@ -32,22 +32,20 @@ public class CannonScript : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
-        //EventManager.cannonEvents.OnMovementCompleted.Get().AddListener(CannonMovementScript_OnMovementCompleted);
-        CannonMovementScript.OnMovementCompleted += CannonMovementScript_OnMovementCompleted;
-        CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
-        cannonData.OnNormalCharacterSpawned += CannonData_OnNormalCharacterSpawned;
-        cannonData.OnSpecialCharacterSpawned += CannonData_OnSpecialCharacterSpawned;
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().AddListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.cannonEvents.OnMovementCompleted.Get().AddListener(CannonMovementScript_OnMovementCompleted);
+        EventManager.castleEvents.OnCastleDestroyed.Get().AddListener(CastleManager_OnCastleDestroyed);
+        EventManager.cannonEvents.OnNormalCharacterSpawned.Get().AddListener(CannonData_OnNormalCharacterSpawned);
+        EventManager.cannonEvents.OnSpecialCharacterSpawned.Get().AddListener(CannonData_OnSpecialCharacterSpawned);
     }
 
     private void OnDisable()
     {
-        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
-        //EventManager.cannonEvents.OnMovementCompleted.Get().RemoveListener(CannonMovementScript_OnMovementCompleted);
-        CannonMovementScript.OnMovementCompleted -= CannonMovementScript_OnMovementCompleted;
-        CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
-        cannonData.OnNormalCharacterSpawned -= CannonData_OnNormalCharacterSpawned;
-        cannonData.OnSpecialCharacterSpawned -= CannonData_OnSpecialCharacterSpawned;
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().RemoveListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.cannonEvents.OnMovementCompleted.Get().RemoveListener(CannonMovementScript_OnMovementCompleted);
+        EventManager.castleEvents.OnCastleDestroyed.Get().RemoveListener(CastleManager_OnCastleDestroyed);
+        EventManager.cannonEvents.OnNormalCharacterSpawned.Get().RemoveListener(CannonData_OnNormalCharacterSpawned);
+        EventManager.cannonEvents.OnSpecialCharacterSpawned.Get().RemoveListener(CannonData_OnSpecialCharacterSpawned);
     }
 
     private void GameManagerScript_OnLevelInstantiated(GameObject instantiatedLevelGameObj)
@@ -76,6 +74,8 @@ public class CannonScript : MonoBehaviour
     private void CastleManager_OnCastleDestroyed(GameObject obj)
     {
         canSpawnPlayers = false;
+
+        Debug.Log("cannotSpawnPlayers");
         transform.DOLocalMove(new Vector3(0f, transform.position.y, 0f), 1f).SetEase(Ease.InOutCirc);
     }
 
@@ -91,14 +91,14 @@ public class CannonScript : MonoBehaviour
         {
             /*_offset = Quaternion.Euler(transform.parent.eulerAngles) * _offset;
 
-            //var pos = MouseWorldPosition() + _offset;
+            var pos = MouseWorldPosition() + _offset;
 
-            //var xPosition = Mathf.Clamp(pos.x, cannonData.minX, cannonData.maxX);
-            //Vector3 position = new Vector3(xPosition, 0f, 0f);
+            var xPosition = Mathf.Clamp(pos.x, cannonData.minX, cannonData.maxX);
+            Vector3 position = new Vector3(xPosition, 0f, 0f);
 
-            ////Spawn Minions
-            //cannonData.SpawnMinions(SMALL_RUNNER, spawnPoint, currLevelData);
-            //transform.localPosition = position;
+            //Spawn Minions
+            cannonData.SpawnMinions(SMALL_RUNNER, spawnPoint, currLevelData);
+            transform.localPosition = position;
 
             // Adjust the offset based on the parent's rotation
             _offset = Quaternion.Euler(transform.parent.eulerAngles) * _offset;

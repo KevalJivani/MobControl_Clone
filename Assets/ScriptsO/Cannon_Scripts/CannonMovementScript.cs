@@ -6,8 +6,6 @@ using DG.Tweening;
 
 public class CannonMovementScript : MonoBehaviour
 {
-    public static Action OnMovementCompleted;
-
     [HideInInspector] public static bool isMoving { private set; get; }
 
     [SerializeField] private SplineContainer spline;
@@ -21,25 +19,17 @@ public class CannonMovementScript : MonoBehaviour
     [SerializeField] private GameObject cannonBottom;
 
     private LevelDataScript currLevelData;
-
+   
     private void OnEnable()
     {
-        CastleScript.OnCastleDestroyed += CastleManager_OnCastleDestroyed;
-        GameManagerScript.Instance.OnLevelInstantiated += GameManagerScript_OnLevelInstantiated;
-        GameManagerScript.Instance.OnLevelCompleted += GameManagerScript_OnLevelCompleted;
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().AddListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.castleEvents.OnCastleDestroyed.Get().AddListener(CastleManager_OnCastleDestroyed);
     }
 
     private void OnDisable()
     {
-        CastleScript.OnCastleDestroyed -= CastleManager_OnCastleDestroyed;
-        GameManagerScript.Instance.OnLevelInstantiated -= GameManagerScript_OnLevelInstantiated;
-        GameManagerScript.Instance.OnLevelCompleted -= GameManagerScript_OnLevelCompleted;
-    }
-
-    private void GameManagerScript_OnLevelCompleted()
-    {
-        //isMoving = false;
-        //Debug.Log("is moving False");
+        EventManager.gameManagerEvents.OnLevelInstantiated.Get().RemoveListener(GameManagerScript_OnLevelInstantiated);
+        EventManager.castleEvents.OnCastleDestroyed.Get().RemoveListener(CastleManager_OnCastleDestroyed);
     }
 
     private void CastleManager_OnCastleDestroyed(GameObject obj)
@@ -57,12 +47,17 @@ public class CannonMovementScript : MonoBehaviour
     {
         splineLength = spline.CalculateLength(splinescount);
 
-        var lastKnotPos = spline.Splines[splinescount].ToArray()[0].Position;
-        transform.DOMove(new Vector3(lastKnotPos.x, transform.position.y, lastKnotPos.z), speed).
+        distancePercentage += speed * Time.deltaTime / splineLength;
+
+        Vector3 currentPosition = spline.EvaluatePosition(splinescount, distancePercentage);
+        transform.position = currentPosition;
+        distancePercentage = 0f;
+
+        transform.DOMove(new Vector3(currentPosition.x, transform.position.y, currentPosition.z), speed).
             SetSpeedBased(true).SetEase(Ease.InOutCirc).OnComplete(() =>
-        {
-            RotateCannonBottom(true);
-        });
+            {
+                RotateCannonBottom(true);
+            });
     }
 
     private void Update()
@@ -87,8 +82,8 @@ public class CannonMovementScript : MonoBehaviour
                 RotateCannonBottom(false);
                 splinescount++;
 
-                EventManager.cannonEvents.OnMovementCompleted.Get()?.Invoke(this);
-                OnMovementCompleted?.Invoke();
+                EventManager.cannonEvents.OnMovementCompleted.Get()?.Invoke();
+                //OnMovementCompleted?.Invoke();
                 distancePercentage = 0f;
             }
         }
