@@ -7,7 +7,6 @@ public class SoundManagerScript : MonoBehaviour
     public static SoundManagerScript Instance;
 
     public AudioMixerGroup mixerGroup;
-
     public Sound[] sounds;
 
     void Awake()
@@ -39,7 +38,7 @@ public class SoundManagerScript : MonoBehaviour
 
     public void Vibrate(long MilliSecs)
     {
-        Vibration.VibrateAndroid(MilliSecs);
+       Vibration.VibrateAndroid(MilliSecs);
     }
 
     public void Play(string sound)

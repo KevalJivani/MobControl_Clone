@@ -83,7 +83,6 @@ public class CannonMovementScript : MonoBehaviour
                 splinescount++;
 
                 EventManager.cannonEvents.OnMovementCompleted.Get()?.Invoke();
-                //OnMovementCompleted?.Invoke();
                 distancePercentage = 0f;
             }
         }

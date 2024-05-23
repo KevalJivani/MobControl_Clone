@@ -65,7 +65,7 @@ public abstract class Character : MonoBehaviour
 
                 if (prefabDistance < 3.0f)
                 {
-                    prefabAvoid += (characterObj.transform.position - runner.transform.position);
+                    prefabAvoid += characterObj.transform.position - runner.transform.position;
                 }
 
                 groupSpeed += runner.GetComponent<Character>().MovementSpeed;
